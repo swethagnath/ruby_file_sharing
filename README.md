@@ -9,3 +9,5 @@ backend database
 start server
     bundle i
     rails s -p 8080
+authentication
+    devise
