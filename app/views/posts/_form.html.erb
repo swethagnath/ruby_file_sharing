@@ -1,0 +1,35 @@
+<div class="container" style="max-width: 500px">  
+  <%= form_for @post do |form| %>
+    <% if post.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
+
+        <ul>
+          <% post.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= form.label :title %>
+      <%= form.text_field :title, class: "form-control" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :description %>
+      <%= form.text_area :description, class: "form-control" %>
+    </div>
+    <div class="field" style="margin-top: 20px;">
+      <%= form.label :image %><br>
+      Current Image:: <%= @post.file_name%>
+      <br>
+      <%= form.file_field :image, class: "form-control" %>
+    </div>
+
+    <div class="actions" style="margin-top: 20px;">
+      <%= form.submit %>
+    </div>
+  <% end %>
+  

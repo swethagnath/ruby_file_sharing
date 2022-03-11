@@ -1,0 +1,51 @@
+<div class="container"> 
+  <% if flash[:notice] %>
+    <div id="notice" style="margin-top: 40px" class="alert alert-danger"><%= flash[:notice] %></div>
+  <% end %>
+  <br>
+  <div style="margin-bottom:100px">
+    <h1 style="margin-top:40px">Posts</h1>
+    <i class="bi bi-upload"></i>
+    <%= link_to 'New Post', new_post_path %>
+  </div>
+  <div class="row" id="product-card">
+    <% @posts.each do |post| %>
+      <div class="col-lg-4" style="padding-bottom:15px">
+        <div class="card" style="width: 20rem;">
+          <%=image_tag(post.cloudinary_id, size:"320x180")%>
+          <div class="card-body">
+            <h5 class="card-title"><%= post.title %></h5>
+            <p class="card-text"><%= post.description %></p>
+              <%= link_to 'Edit', edit_post_path(post), method: :get, class:"btn btn-primary text-center d-inline", form: {style: 'display:inline-block;'} %>
+              <%= button_to 'Destroy', post_path(post), method: :delete, remote: true, class:"btn btn-danger text-center", form: {style: 'display:inline-block;'} %>
+              <%= button_to 'Generate Shorturl', shorturl_post_path(post), method: :post, data: { confirm: 'Are you sure?' }, class:"btn btn-secondary text-center", form: {style: 'margin-top:20px;'}%>
+              <%if post.shorturl?%>
+                <div style="margin:20px">short url - <%= post.shorturl %></div>
+                <%if post.public_access?%>
+                  <p>
+                    <a class="btn btn-info" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Enable Private Link</a>
+                  </p>
+                  <div class="row">
+                    <div class="col">
+                      <div class="collapse multi-collapse" id="multiCollapseExample1">
+                        <div class="card card-body">
+                          <%= form_for User.new, url: private_shorturl_post_path(post) do |f| %>
+                            <%= f.collection_check_boxes :email, User.all, :id, :email do |m| %>
+                              <%= m.check_box %> <%= m.label %><br>
+                            <% end %>
+                            <%= f.submit "private" %>
+                          <%end%>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <%else%>
+                  <%= button_to 'disable private',private_shorturl_post_path(post, :user => {email:[]}), method: :post %>
+                <%end%>
+              <%end%>
+          </div>
+        </div>  
+      </div>  
+    <% end %>
+  </div>
+</div>  
